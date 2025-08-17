@@ -1,7 +1,6 @@
 package com.aluracursos.api_foro_hub.domain.topico;
 
 import com.aluracursos.api_foro_hub.domain.usuario.UsuarioRepository;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -46,30 +45,21 @@ public class TopicoService {
     }
 
     @Transactional
-    public DatoDetalleTopico actualizar(Long id, @Valid DatoActualizacionTopico datos) {
-        var optionalTopico = topicoRepository.findById(id);
+    public DatoDetalleTopico actualizar(Long id, DatoActualizacionTopico datos) {
+        var topico = topicoRepository.findById(id)
+                .orElseThrow(() -> new ValidacionExcepcion("No se encontró el tópico con id: " + id));
 
-        if (optionalTopico.isEmpty()) {
-            throw new ValidacionExcepcion("No se encontró el tópico con id: " + id);
-        }
+        if (datos.titulo() != null) topico.setTitulo(datos.titulo());
+        if (datos.mensaje() != null) topico.setMensaje(datos.mensaje());
+        if (datos.curso() != null) topico.setCurso(datos.curso());
 
-        var topico = optionalTopico.get();
-
-        topico.setTitulo(datos.titulo());
-        topico.setMensaje(datos.mensaje());
-        topico.setCurso(datos.curso());
-
-        return new DatoDetalleTopico(topico);
+        return new DatoDetalleTopico(topicoRepository.save(topico));
     }
 
+    @Transactional
     public void eliminar(Long id) {
-        var optionalTopico = topicoRepository.findById(id);
-
-        if (optionalTopico.isEmpty()) {
-            throw new ValidacionExcepcion("No se encontró el tópico con id: " + id);
-        }
-
-        var topico = optionalTopico.get();
+        var topico = topicoRepository.findById(id)
+                .orElseThrow(() -> new ValidacionExcepcion("No se encontró el tópico con id: " + id));
 
         topico.setEstado(false);
     }

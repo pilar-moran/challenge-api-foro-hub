@@ -3,7 +3,6 @@ package com.aluracursos.api_foro_hub.domain.topico;
 import com.aluracursos.api_foro_hub.domain.usuario.Usuario;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @Entity(name = "Topico")
@@ -20,8 +19,10 @@ public class Topico {
     private Long id;
     private String titulo;
     private String mensaje;
-    private Boolean estado;
     private String curso;
+
+    @Column(nullable = false)
+    private Boolean estado;
 
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;

@@ -2,24 +2,22 @@ package com.aluracursos.api_foro_hub.controller;
 
 import com.aluracursos.api_foro_hub.domain.topico.*;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import java.net.URI;
 
 @RestController
 @RequestMapping("/topicos")
 public class TopicoController {
 
-    private final TopicoService service;
-
-    public TopicoController(TopicoService service) {
-        this.service = service;
-    }
+    @Autowired
+    private TopicoService service;
 
     @PostMapping
     public ResponseEntity<DatoResumenTopico> registrar(@RequestBody @Valid DatoRegistroTopico datos, UriComponentsBuilder uriComponentsBuilder) {
@@ -31,7 +29,7 @@ public class TopicoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<DatoResumenTopico>> listar(@PageableDefault(size = 10, sort = {"fechaCreacion"}) Pageable paginacion) {
+    public ResponseEntity<Page<DatoResumenTopico>> listar(@PageableDefault(size = 10, sort = {"fechaCreacion"}, direction = Sort.Direction.DESC) Pageable paginacion) {
         var page = service.listar(paginacion);
 
         return ResponseEntity.ok(page);
@@ -44,7 +42,7 @@ public class TopicoController {
         return ResponseEntity.ok(detalle);
     }
 
-    @PutMapping("/id")
+    @PutMapping("/{id}")
     public ResponseEntity<DatoDetalleTopico> actualizar(@PathVariable Long id, @RequestBody @Valid DatoActualizacionTopico datos) {
         var actualizado = service.actualizar(id, datos);
         return ResponseEntity.ok(actualizado);
