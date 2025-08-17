@@ -68,6 +68,6 @@ Proyecto desarrollado por **Pilar Morán** como parte de la práctica de desarro
 ## ⚙️ Clonar el Repositorio
 
    ```bash
-   git clone https://github.com/pilar-moran/foro-hub.git
+   git clone https://github.com/pilar-moran/challenge-api-foro-hub.git
  
 
